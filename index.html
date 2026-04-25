@@ -138,6 +138,16 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bark);color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;transition:transform .3s;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .empty-state{text-align:center;padding:40px;color:rgba(44,31,20,0.35);font-size:13px}
+.date-filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.df-btn{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;color:var(--bark);transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.df-btn.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.df-btn:hover:not(.active){background:var(--cream)}
+.df-custom{display:none;gap:6px;align-items:center;flex-wrap:wrap}
+.df-custom.visible{display:flex}
+.df-input{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--bark);outline:none}
+.df-input:focus{border-color:var(--orange)}
+.df-label{font-size:11px;color:rgba(44,31,20,0.5);font-weight:500}
+.df-results{font-size:11px;color:rgba(44,31,20,0.4);margin-left:auto}
 </style>
 </head>
 <body>
@@ -181,6 +191,20 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
     <div class="kpi"><div class="kpi-val" id="kpi-avg-margin">&#8212;</div><div class="kpi-label">Avg Margin</div></div>
     <div class="kpi red"><div class="kpi-val" id="kpi-outstanding">&#8212;</div><div class="kpi-label">Outstanding</div></div>
     <div class="kpi"><div class="kpi-val" id="kpi-avg-cpb">&#8212;</div><div class="kpi-label">Avg Cost/Bag</div></div>
+  </div>
+  <div class="date-filter-bar">
+    <button class="df-btn active" id="df-all"       onclick="setFinDateFilter('all',this)">All Time</button>
+    <button class="df-btn"        id="df-thismonth" onclick="setFinDateFilter('thismonth',this)">This Month</button>
+    <button class="df-btn"        id="df-lastmonth" onclick="setFinDateFilter('lastmonth',this)">Last Month</button>
+    <button class="df-btn"        id="df-thisyear"  onclick="setFinDateFilter('thisyear',this)">This Year</button>
+    <button class="df-btn"        id="df-custom"    onclick="setFinDateFilter('custom',this)">Custom…</button>
+    <div class="df-custom" id="df-custom-wrap">
+      <span class="df-label">From</span>
+      <input class="df-input" type="date" id="df-from" onchange="renderOrders()">
+      <span class="df-label">To</span>
+      <input class="df-input" type="date" id="df-to" onchange="renderOrders()">
+    </div>
+    <span class="df-results" id="df-results"></span>
   </div>
   <div class="filters-bar">
     <input class="search-box" id="fin-search" placeholder="&#128269; Search client..." oninput="renderOrders()">
@@ -429,6 +453,50 @@ function setFilter(f,btn){
   renderOrders();
 }
 
+let finDateFilter='all';
+
+function setFinDateFilter(f,btn){
+  finDateFilter=f;
+  document.querySelectorAll('.df-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const cw=document.getElementById('df-custom-wrap');
+  if(f==='custom')cw.classList.add('visible');
+  else cw.classList.remove('visible');
+  renderOrders();
+}
+
+function getFinDateRange(){
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  switch(finDateFilter){
+    case 'thismonth':
+      return{from:new Date(now.getFullYear(),now.getMonth(),1),to:new Date(today.getTime()+86400000)};
+    case 'lastmonth':
+      return{from:new Date(now.getFullYear(),now.getMonth()-1,1),to:new Date(now.getFullYear(),now.getMonth(),1)};
+    case 'thisyear':
+      return{from:new Date(now.getFullYear(),0,1),to:new Date(today.getTime()+86400000)};
+    case 'custom':{
+      const from=document.getElementById('df-from').value;
+      const to=document.getElementById('df-to').value;
+      return{from:from?new Date(from):null,to:to?new Date(new Date(to).getTime()+86400000):null};
+    }
+    default:return{from:null,to:null};
+  }
+}
+
+function finEntryMatchesDate(f){
+  if(finDateFilter==='all')return true;
+  const range=getFinDateRange();
+  if(!range.from&&!range.to)return true;
+  const dateStr=String(f['Last Updated']||'');
+  if(!dateStr)return true;
+  const d=new Date(dateStr);
+  if(isNaN(d.getTime()))return true;
+  if(range.from&&d<range.from)return false;
+  if(range.to&&d>=range.to)return false;
+  return true;
+}
+
 function filteredFinance(){
   const search=(document.getElementById('fin-search').value||'').toLowerCase();
   return financeData.filter(f=>{
@@ -440,15 +508,18 @@ function filteredFinance(){
       activeFilter==='partial'?ps==='partial':
       activeFilter==='paid'?ps==='paid':
       activeFilter==='lowmargin'?margin<20:true;
-    return ms&&mf;
+    const df=finEntryMatchesDate(f);
+    return ms&&mf&&df;
   });
 }
 
 function renderOrders(){
   const filtered=filteredFinance();
   const tbody=document.getElementById('fin-tbody');tbody.innerHTML='';
+  const resEl=document.getElementById('df-results');
+  if(resEl)resEl.textContent=filtered.length+' order'+(filtered.length!==1?'s':'')+(finDateFilter!=='all'?' in period':'');
   if(!filtered.length){
-    tbody.innerHTML='<tr><td colspan="14" class="empty-state">No orders found</td></tr>';
+    tbody.innerHTML='<tr><td colspan="14" class="empty-state">No orders found for selected period</td></tr>';
     renderOrdersKPIs();return;
   }
   filtered.forEach((f,i)=>{
