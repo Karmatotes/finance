@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KarmaTotes — Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2EDE6;--surface:#FDFAF6;--bark:#2C1F14;--moss:#3B6B45;
+  --moss-light:#5A9467;--sand:#D4A96A;--cream:#EDE5D8;
+  --red:#C0392B;--red-soft:#FAE9E7;--green-soft:#EAF4EC;
+  --border:rgba(44,31,20,0.12);--shadow:0 2px 12px rgba(44,31,20,0.10);
+  --orange:#E65100;--orange-soft:#FFF3E0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--bark);min-height:100vh}
+.sync-bar{background:var(--bark);color:rgba(255,255,255,0.7);padding:3px 24px;font-size:11px;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:8px;height:24px;position:sticky;top:0;z-index:101}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#9CA3AF;flex-shrink:0;transition:background .3s}
+.sync-dot.syncing{background:#F59E0B;animation:pulse .8s infinite}
+.sync-dot.ok{background:#22C55E}.sync-dot.err{background:#EF4444}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-text{flex:1}.sync-time{opacity:.5;font-size:10px}
+header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:24px;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,0.25)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:34px;height:34px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.logo span{font-size:12px;color:rgba(255,255,255,0.6);font-weight:400}
+.header-right{display:flex;align-items:center;gap:10px}
+.date-badge{background:rgba(255,255,255,0.15);border-radius:6px;padding:4px 10px;font-size:12px;font-family:'DM Mono',monospace}
+.btn-link{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
+.btn-link:hover{background:rgba(255,255,255,0.25)}
+.nav-tabs{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:0;overflow-x:auto}
+.nav-tab{padding:12px 18px;font-size:13px;font-weight:500;color:rgba(44,31,20,0.5);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.nav-tab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:600}
+.nav-tab:hover:not(.active){color:var(--bark)}
+.page{display:none;padding:24px}.page.active{display:block}
+
+/* KPI ROW */
+.kpi-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.kpi{background:var(--surface);border-radius:10px;padding:12px 16px;flex:1;min-width:120px;border:1px solid var(--border)}
+.kpi-val{font-size:22px;font-weight:700;color:var(--bark);line-height:1}
+.kpi-label{font-size:11px;color:rgba(44,31,20,0.5);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+.kpi.green .kpi-val{color:var(--moss)}
+.kpi.red .kpi-val{color:var(--red)}
+.kpi.orange .kpi-val{color:var(--orange)}
+
+/* FILTERS */
+.filters-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;color:var(--bark);transition:all .15s;font-family:'DM Sans',sans-serif}
+.filter-btn.active,.filter-btn:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+.search-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--bark);outline:none;width:200px}
+.search-box:focus{border-color:var(--orange)}
+
+/* ORDERS TABLE */
+.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin-bottom:24px}
+.fin-table{width:100%;border-collapse:collapse;font-size:12px}
+.fin-table th{background:var(--orange);color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.fin-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.fin-table tr:last-child td{border-bottom:none}
+.fin-table tr:hover td{background:var(--cream);cursor:pointer}
+.pay-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
+.pay-paid{background:#E8F5E9;color:#166534}
+.pay-partial{background:#FFF8E1;color:#92400E}
+.pay-pending{background:var(--red-soft);color:var(--red)}
+.margin-good{color:var(--moss);font-weight:600}
+.margin-warn{color:#92400E;font-weight:600}
+.margin-bad{color:var(--red);font-weight:600}
+
+/* DETAIL PANEL */
+.detail-panel{display:none;position:fixed;right:0;top:84px;bottom:0;width:380px;background:var(--surface);border-left:1px solid var(--border);box-shadow:-4px 0 20px rgba(44,31,20,0.1);z-index:200;overflow-y:auto}
+.detail-panel.open{display:block}
+.detail-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
+.detail-title{font-size:15px;font-weight:700;color:var(--bark)}
+.detail-sub{font-size:12px;color:rgba(44,31,20,0.5);margin-top:2px}
+.btn-close{background:none;border:none;cursor:pointer;font-size:18px;color:rgba(44,31,20,0.4);padding:4px}
+.detail-body{padding:16px 20px}
+.detail-section{margin-bottom:16px}
+.detail-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:rgba(44,31,20,0.4);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.detail-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px}
+.detail-row label{color:rgba(44,31,20,0.5)}
+.detail-row span{font-weight:600;text-align:right}
+.cost-breakdown{background:var(--cream);border-radius:8px;padding:12px;margin-bottom:14px}
+.cost-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+.cost-row.total{border-top:1px solid var(--border);margin-top:6px;padding-top:6px;font-weight:700;font-size:13px}
+.cost-row.profit{color:var(--moss);font-weight:700}
+.cost-row.loss{color:var(--red);font-weight:700}
+
+/* PAYMENT UPDATE FORM */
+.payment-form{background:var(--orange-soft);border:1px solid rgba(230,81,0,0.2);border-radius:10px;padding:14px}
+.payment-form-title{font-size:12px;font-weight:700;color:var(--orange);margin-bottom:10px;text-transform:uppercase;letter-spacing:.4px}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:11px;font-weight:600;color:rgba(44,31,20,0.6);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.form-control{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--bark);outline:none;transition:border-color .15s}
+.form-control:focus{border-color:var(--orange)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-save-payment{width:100%;background:var(--orange);color:#fff;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s}
+.btn-save-payment:hover{background:#F4511E}
+.btn-save-payment:disabled{opacity:.5;cursor:not-allowed}
+
+/* MONTHLY SETTINGS */
+.settings-card{background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:20px;margin-bottom:20px;max-width:600px}
+.settings-title{font-size:14px;font-weight:700;color:var(--bark);margin-bottom:4px}
+.settings-sub{font-size:12px;color:rgba(44,31,20,0.5);margin-bottom:16px}
+.month-selector{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.month-btn{padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface);color:rgba(44,31,20,0.6);transition:all .15s;font-family:'DM Sans',sans-serif}
+.month-btn.active{border-color:var(--orange);background:var(--orange-soft);color:var(--orange)}
+.input-with-prefix{position:relative}
+.input-prefix{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:600;color:rgba(44,31,20,0.4)}
+.input-with-prefix .form-control{padding-left:22px}
+.btn-save-settings{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
+.btn-save-settings:hover{background:#F4511E}
+.settings-saved{display:none;color:var(--moss);font-size:12px;font-weight:600;margin-top:8px}
+.settings-saved.visible{display:block}
+
+/* P&L SUMMARY */
+.pl-card{background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:20px;margin-bottom:16px}
+.pl-title{font-size:14px;font-weight:700;color:var(--bark);margin-bottom:12px}
+.pl-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.pl-row:last-child{border-bottom:none}
+.pl-row label{color:rgba(44,31,20,0.6)}
+.pl-row span{font-weight:600}
+.pl-row.total{font-size:15px;font-weight:700;border-top:2px solid var(--border);margin-top:4px;padding-top:10px}
+.pl-row.total span.profit{color:var(--moss)}
+.pl-row.total span.loss{color:var(--red)}
+.salesperson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.sp-card{background:var(--cream);border-radius:10px;padding:12px 14px;border:1px solid var(--border)}
+.sp-name{font-size:12px;font-weight:700;color:var(--bark);margin-bottom:6px}
+.sp-stat{font-size:11px;color:rgba(44,31,20,0.6);margin-bottom:2px}
+.sp-val{font-size:14px;font-weight:700;color:var(--orange)}
+
+/* LOADING / TOAST */
+#loading-overlay{position:fixed;inset:0;background:rgba(44,31,20,0.75);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#loading-overlay.hidden{display:none}
+.loading-spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:#fff;font-size:15px;font-weight:600}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bark);color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;transition:transform .3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.empty-state{text-align:center;padding:40px;color:rgba(44,31,20,0.35);font-size:13px}
+</style>
+</head>
+<body>
+
+<div id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading Finance...</div>
+</div>
+
+<div class="sync-bar">
+  <div class="sync-dot" id="sync-dot"></div>
+  <span class="sync-text" id="sync-text">Connecting...</span>
+  <span class="sync-time" id="sync-time"></span>
+</div>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">&#8377;</div>
+    <div><h1>KarmaTotes</h1><span>Finance &middot; P&amp;L Tracker</span></div>
+  </div>
+  <div class="header-right">
+    <div class="date-badge" id="live-date"></div>
+    <a href="https://karmatotes.github.io/tracker/" target="_blank" class="btn-link">&#8862; Production</a>
+    <a href="https://karmatotes.github.io/orders/" target="_blank" class="btn-link">&#65291; Orders</a>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <div class="nav-tab active" id="tab-orders"   onclick="switchTab('orders')">&#128203; Orders P&amp;L</div>
+  <div class="nav-tab"        id="tab-pl"       onclick="switchTab('pl')">&#128200; Monthly P&amp;L</div>
+  <div class="nav-tab"        id="tab-sales"    onclick="switchTab('sales')">&#127775; Salesperson</div>
+  <div class="nav-tab"        id="tab-settings" onclick="switchTab('settings')">&#9881; Salaries &amp; Overhead</div>
+</div>
+
+<!-- ═══════════ ORDERS P&L PAGE -->
+<div class="page active" id="page-orders">
+  <div class="kpi-row" id="orders-kpis">
+    <div class="kpi"><div class="kpi-val" id="kpi-total-orders">&#8212;</div><div class="kpi-label">Total Orders</div></div>
+    <div class="kpi green"><div class="kpi-val" id="kpi-revenue">&#8212;</div><div class="kpi-label">Total Revenue</div></div>
+    <div class="kpi orange"><div class="kpi-val" id="kpi-profit">&#8212;</div><div class="kpi-label">Gross Profit</div></div>
+    <div class="kpi"><div class="kpi-val" id="kpi-avg-margin">&#8212;</div><div class="kpi-label">Avg Margin</div></div>
+    <div class="kpi red"><div class="kpi-val" id="kpi-outstanding">&#8212;</div><div class="kpi-label">Outstanding</div></div>
+    <div class="kpi"><div class="kpi-val" id="kpi-avg-cpb">&#8212;</div><div class="kpi-label">Avg Cost/Bag</div></div>
+  </div>
+  <div class="filters-bar">
+    <input class="search-box" id="fin-search" placeholder="&#128269; Search client..." oninput="renderOrders()">
+    <button class="filter-btn active" id="ff-all"     onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn"        id="ff-pending" onclick="setFilter('pending',this)">Pending Payment</button>
+    <button class="filter-btn"        id="ff-partial" onclick="setFilter('partial',this)">Partial</button>
+    <button class="filter-btn"        id="ff-paid"    onclick="setFilter('paid',this)">Paid</button>
+    <button class="filter-btn"        id="ff-lowmargin" onclick="setFilter('lowmargin',this)">Low Margin</button>
+  </div>
+  <div class="table-wrap">
+    <table class="fin-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Client</th><th>Qty</th><th>Order &#8377;</th>
+          <th>Material</th><th>Print</th><th>Salaries</th><th>Overhead</th>
+          <th>Total Cost</th><th>Cost/Bag</th><th>Profit</th><th>Margin</th>
+          <th>Payment</th><th>Balance</th>
+        </tr>
+      </thead>
+      <tbody id="fin-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ MONTHLY P&L PAGE -->
+<div class="page" id="page-pl">
+  <div class="filters-bar">
+    <select class="search-box" id="pl-month-filter" onchange="renderPL()" style="width:auto">
+      <option value="all">All Months</option>
+    </select>
+  </div>
+  <div id="pl-content"></div>
+</div>
+
+<!-- ═══════════ SALESPERSON PAGE -->
+<div class="page" id="page-sales">
+  <div id="sales-content"></div>
+</div>
+
+<!-- ═══════════ LABOUR & OVERHEAD SETTINGS PAGE -->
+<div class="page" id="page-settings">
+  <div class="settings-card">
+    <div class="settings-title">Monthly Salaries &amp; Overhead</div>
+    <div class="settings-sub">Enter total amounts once per month. Both salaries and overhead are split across all orders proportionally by quantity of bags produced.</div>
+
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:600;color:rgba(44,31,20,0.6);margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px">Select Month</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <select class="form-control" id="settings-month" style="width:140px">
+          <option value="January">January</option>
+          <option value="February">February</option>
+          <option value="March">March</option>
+          <option value="April">April</option>
+          <option value="May">May</option>
+          <option value="June">June</option>
+          <option value="July">July</option>
+          <option value="August">August</option>
+          <option value="September">September</option>
+          <option value="October">October</option>
+          <option value="November">November</option>
+          <option value="December">December</option>
+        </select>
+        <select class="form-control" id="settings-year" style="width:100px"></select>
+      </div>
+    </div>
+
+    <div class="form-row-2" style="margin-bottom:12px">
+      <div class="form-group" style="margin-bottom:0">
+        <label>Total Salaries &#8377; this month</label>
+        <div class="input-with-prefix">
+          <span class="input-prefix">&#8377;</span>
+          <input class="form-control" id="settings-labour" type="number" placeholder="e.g. 80000" min="0">
+        </div>
+        <div style="font-size:11px;color:rgba(44,31,20,0.4);margin-top:4px">All tailors + helpers combined</div>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label>Total Monthly Overhead &#8377;</label>
+        <div class="input-with-prefix">
+          <span class="input-prefix">&#8377;</span>
+          <input class="form-control" id="settings-overhead" type="number" placeholder="e.g. 50000" min="0">
+        </div>
+        <div style="font-size:11px;color:rgba(44,31,20,0.4);margin-top:4px">Rent, electricity, misc expenses</div>
+      </div>
+    </div>
+
+    <div id="settings-preview" style="display:none;margin-bottom:12px;padding:10px 12px;background:var(--orange-soft);border-radius:8px;font-size:12px;color:var(--orange)"></div>
+
+    <button class="btn-save-settings" onclick="saveSettings()">Save &amp; Recalculate All Orders</button>
+    <div class="settings-saved" id="settings-saved">&#10003; Saved &amp; all orders recalculated</div>
+  </div>
+
+  <!-- Existing overhead records -->
+  <div class="settings-card" style="max-width:600px">
+    <div class="settings-title">Saved Monthly Rates</div>
+    <div class="settings-sub">History of all labour rates and overheads entered</div>
+    <div id="overhead-history"></div>
+  </div>
+</div>
+
+<!-- ═══════════ DETAIL PANEL (slide in from right) -->
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-header">
+    <div>
+      <div class="detail-title" id="dp-client">—</div>
+      <div class="detail-sub" id="dp-sub">—</div>
+    </div>
+    <button class="btn-close" onclick="closeDetail()">&#10005;</button>
+  </div>
+  <div class="detail-body">
+    <div class="detail-section">
+      <div class="detail-section-title">Order Summary</div>
+      <div class="detail-row"><label>Quantity</label><span id="dp-qty">—</span></div>
+      <div class="detail-row"><label>Order Value</label><span id="dp-order-value">—</span></div>
+      <div class="detail-row"><label>Advance Received</label><span id="dp-advance">—</span></div>
+      <div class="detail-row"><label>Balance Due</label><span id="dp-balance">—</span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Cost Breakdown</div>
+      <div class="cost-breakdown">
+        <div class="cost-row"><span>Material Cost</span><span id="dp-material-cost">—</span></div>
+        <div class="cost-row"><span>Print Cost</span><span id="dp-print-cost">—</span></div>
+        <div class="cost-row"><span>Salary Share</span><span id="dp-labour-cost">—</span></div>
+        <div class="cost-row"><span>Overhead Share</span><span id="dp-overhead">—</span></div>
+        <div class="cost-row total"><span>Total Cost</span><span id="dp-total-cost">—</span></div>
+        <div class="cost-row total"><span>Cost Per Bag</span><span id="dp-cpb">—</span></div>
+        <div class="cost-row profit" id="dp-profit-row"><span>Gross Profit</span><span id="dp-profit">—</span></div>
+        <div class="cost-row" style="font-size:12px"><span>Margin %</span><span id="dp-margin">—</span></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="payment-form">
+        <div class="payment-form-title">Update Payment</div>
+        <div class="form-group">
+          <label>Payment Status</label>
+          <select class="form-control" id="dp-pay-status">
+            <option value="Pending">Pending</option>
+            <option value="Partial">Partial</option>
+            <option value="Paid">Paid</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Advance &#8377;</label>
+            <input class="form-control" id="dp-advance-input" type="number" min="0" oninput="previewBalance()">
+          </div>
+          <div class="form-group">
+            <label>Payment Date</label>
+            <input class="form-control" id="dp-pay-date" type="date">
+          </div>
+        </div>
+        <div id="dp-balance-preview" style="font-size:12px;color:rgba(44,31,20,0.5);margin-bottom:4px"></div>
+        <button class="btn-save-payment" id="dp-save-btn" onclick="savePayment()">Save Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SHEET_URL="https://script.google.com/macros/s/AKfycbxpcfocezAqlwg37_SujPuDilIyXEeve5A8Niir1vohU3pz2sytBrSIjQyX6vLmoIPN/exec";
+
+let financeData=[], overheadData=[];
+let activeFilter='all', currentOrderId=null;
+
+function nowLabel(){const n=new Date();return n.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+', '+n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});}
+function fmtINR(n){const v=Number(n)||0;return'\u20b9'+Math.round(v).toLocaleString('en-IN');}
+function fmtINRFull(n){const v=Number(n)||0;return'\u20b9'+v.toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function fmtPct(n){return(Number(n)||0).toFixed(1)+'%';}
+function todayISO(){return new Date().toISOString().split('T')[0];}
+
+function setSyncStatus(state,msg){
+  document.getElementById('sync-dot').className='sync-dot '+state;
+  document.getElementById('sync-text').textContent=msg;
+  const t=document.getElementById('sync-time');
+  if(state==='ok')t.textContent='Last sync: '+nowLabel();else t.textContent='';
+}
+
+async function sheetCall(params){
+  setSyncStatus('syncing','Syncing...');
+  try{
+    const res=await fetch(SHEET_URL+'?'+new URLSearchParams(params).toString());
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    setSyncStatus('ok','Synced \u00b7 karmatotes@gmail.com');return data;
+  }catch(err){setSyncStatus('err','Sync failed.');console.error(err);return null;}
+}
+
+async function sheetPost(body){
+  setSyncStatus('syncing','Saving...');
+  try{
+    const res=await fetch(SHEET_URL,{method:'POST',body:JSON.stringify(body)});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    setSyncStatus('ok','Saved \u00b7 karmatotes@gmail.com');return data;
+  }catch(err){setSyncStatus('err','Save failed.');console.error(err);return null;}
+}
+
+async function initApp(){
+  document.getElementById('live-date').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+  // Populate year selector
+  const yearSel=document.getElementById('settings-year');
+  const thisYear=new Date().getFullYear();
+  for(let y=thisYear-1;y<=thisYear+1;y++){
+    const opt=document.createElement('option');
+    opt.value=y;opt.textContent=y;
+    if(y===thisYear)opt.selected=true;
+    yearSel.appendChild(opt);
+  }
+
+  // Set current month in settings
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('settings-month').value=months[new Date().getMonth()];
+
+  const data=await sheetCall({action:'getFinance'});
+  document.getElementById('loading-overlay').classList.add('hidden');
+
+  if(data){
+    financeData=data.finance||[];
+    overheadData=data.overhead||[];
+  }
+
+  renderOrders();
+  renderOrdersKPIs();
+  renderPLMonthOptions();
+  renderOverheadHistory();
+  prefillSettings();
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('page-'+tab).classList.add('active');
+  closeDetail();
+  if(tab==='pl')renderPL();
+  if(tab==='sales')renderSales();
+}
+
+// ── ORDERS P&L ──────────────────────────────────────────────
+function setFilter(f,btn){
+  activeFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders();
+}
+
+function filteredFinance(){
+  const search=(document.getElementById('fin-search').value||'').toLowerCase();
+  return financeData.filter(f=>{
+    const ms=!search||String(f['Client']||'').toLowerCase().includes(search);
+    const ps=String(f['Payment Status']||'Pending').toLowerCase();
+    const margin=Number(f['Margin %'])||0;
+    const mf=activeFilter==='all'?true:
+      activeFilter==='pending'?ps==='pending':
+      activeFilter==='partial'?ps==='partial':
+      activeFilter==='paid'?ps==='paid':
+      activeFilter==='lowmargin'?margin<20:true;
+    return ms&&mf;
+  });
+}
+
+function renderOrders(){
+  const filtered=filteredFinance();
+  const tbody=document.getElementById('fin-tbody');tbody.innerHTML='';
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="14" class="empty-state">No orders found</td></tr>';
+    renderOrdersKPIs();return;
+  }
+  filtered.forEach((f,i)=>{
+    const ps=String(f['Payment Status']||'Pending');
+    const payClass=ps==='Paid'?'pay-paid':ps==='Partial'?'pay-partial':'pay-pending';
+    const margin=Number(f['Margin %'])||0;
+    const marginClass=margin>=30?'margin-good':margin>=15?'margin-warn':'margin-bad';
+    const profit=Number(f['Gross Profit'])||0;
+    const tr=document.createElement('tr');
+    tr.onclick=()=>openDetail(f['Order ID']);
+    tr.innerHTML=
+      '<td style="color:rgba(44,31,20,0.4);font-size:11px">'+(i+1)+'</td>'+
+      '<td><strong>'+String(f['Client']||'')+'</strong></td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-weight:600">'+String(f['Qty']||0)+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-weight:600">'+fmtINR(f['Order Value'])+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-size:11px">'+fmtINR(f['Material Cost'])+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-size:11px">'+fmtINR(f['Print Cost'])+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-size:11px">'+fmtINR(f['Labour Cost'])+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-size:11px">'+fmtINR(f['Overhead Share'])+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-weight:600">'+fmtINR(f['Total Cost'])+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace">'+fmtINRFull(f['Cost Per Bag'])+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;'+(profit<0?'color:var(--red)':'color:var(--moss)')+';font-weight:600">'+fmtINR(profit)+'</td>'+
+      '<td><span class="'+marginClass+'">'+fmtPct(margin)+'</span></td>'+
+      '<td><span class="pay-pill '+payClass+'">'+ps+'</span></td>'+
+      '<td style="font-family:\'DM Mono\',monospace;color:'+(Number(f['Balance'])>0?'var(--red)':'var(--moss)')+'">'+fmtINR(f['Balance'])+'</td>';
+    tbody.appendChild(tr);
+  });
+  renderOrdersKPIs();
+}
+
+function renderOrdersKPIs(){
+  const data=filteredFinance();
+  const totalRev=data.reduce((s,f)=>s+(Number(f['Order Value'])||0),0);
+  const totalProfit=data.reduce((s,f)=>s+(Number(f['Gross Profit'])||0),0);
+  const totalOutstanding=data.filter(f=>f['Payment Status']!=='Paid').reduce((s,f)=>s+(Number(f['Balance'])||0),0);
+  const margins=data.filter(f=>Number(f['Order Value'])>0).map(f=>Number(f['Margin %'])||0);
+  const avgMargin=margins.length?margins.reduce((a,b)=>a+b,0)/margins.length:0;
+  const cpbs=data.filter(f=>Number(f['Cost Per Bag'])>0).map(f=>Number(f['Cost Per Bag']));
+  const avgCPB=cpbs.length?cpbs.reduce((a,b)=>a+b,0)/cpbs.length:0;
+  document.getElementById('kpi-total-orders').textContent=data.length;
+  document.getElementById('kpi-revenue').textContent=fmtINR(totalRev);
+  document.getElementById('kpi-profit').textContent=fmtINR(totalProfit);
+  document.getElementById('kpi-avg-margin').textContent=fmtPct(avgMargin);
+  document.getElementById('kpi-outstanding').textContent=fmtINR(totalOutstanding);
+  document.getElementById('kpi-avg-cpb').textContent=fmtINRFull(avgCPB);
+}
+
+// ── DETAIL PANEL ─────────────────────────────────────────────
+function openDetail(orderId){
+  const f=financeData.find(x=>String(x['Order ID'])===String(orderId));
+  if(!f)return;
+  currentOrderId=orderId;
+  document.getElementById('dp-client').textContent=String(f['Client']||'');
+  document.getElementById('dp-sub').textContent='Order #'+orderId+' \u00b7 '+String(f['Qty']||0)+' pcs';
+  document.getElementById('dp-qty').textContent=String(f['Qty']||0)+' pcs';
+  document.getElementById('dp-order-value').textContent=fmtINR(f['Order Value']);
+  document.getElementById('dp-advance').textContent=fmtINR(f['Advance']);
+  document.getElementById('dp-balance').textContent=fmtINR(f['Balance']);
+  document.getElementById('dp-material-cost').textContent=fmtINR(f['Material Cost']);
+  document.getElementById('dp-print-cost').textContent=fmtINR(f['Print Cost']);
+  document.getElementById('dp-labour-cost').textContent=fmtINR(f['Labour Cost']);
+  document.getElementById('dp-overhead').textContent=fmtINR(f['Overhead Share']);
+  document.getElementById('dp-total-cost').textContent=fmtINR(f['Total Cost']);
+  document.getElementById('dp-cpb').textContent=fmtINRFull(f['Cost Per Bag']);
+  const profit=Number(f['Gross Profit'])||0;
+  document.getElementById('dp-profit').textContent=fmtINR(profit);
+  const profitRow=document.getElementById('dp-profit-row');
+  profitRow.className='cost-row '+(profit>=0?'profit':'loss');
+  document.getElementById('dp-margin').textContent=fmtPct(f['Margin %']);
+  // Payment form prefill
+  document.getElementById('dp-pay-status').value=f['Payment Status']||'Pending';
+  document.getElementById('dp-advance-input').value=Number(f['Advance'])||'';
+  document.getElementById('dp-pay-date').value=f['Payment Date']||'';
+  document.getElementById('dp-balance-preview').textContent='';
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closeDetail(){
+  document.getElementById('detail-panel').classList.remove('open');
+  currentOrderId=null;
+}
+
+function previewBalance(){
+  const f=financeData.find(x=>String(x['Order ID'])===String(currentOrderId));
+  if(!f)return;
+  const ov=Number(f['Order Value'])||0;
+  const adv=Number(document.getElementById('dp-advance-input').value)||0;
+  const bal=ov-adv;
+  const el=document.getElementById('dp-balance-preview');
+  el.textContent='Balance due: '+fmtINR(bal);
+  el.style.color=bal<=0?'var(--moss)':'var(--red)';
+  // Auto-set payment status
+  const sel=document.getElementById('dp-pay-status');
+  if(adv>=ov)sel.value='Paid';
+  else if(adv>0)sel.value='Partial';
+  else sel.value='Pending';
+}
+
+async function savePayment(){
+  if(!currentOrderId)return;
+  const btn=document.getElementById('dp-save-btn');
+  btn.disabled=true;btn.textContent='Saving...';
+  const advance=Number(document.getElementById('dp-advance-input').value)||0;
+  const paymentStatus=document.getElementById('dp-pay-status').value;
+  const paymentDate=document.getElementById('dp-pay-date').value;
+  const result=await sheetPost({
+    action:'updatePayment',
+    orderId:currentOrderId,
+    advance,paymentStatus,paymentDate
+  });
+  if(result&&result.success){
+    // Update local data
+    const f=financeData.find(x=>String(x['Order ID'])===String(currentOrderId));
+    if(f){
+      f['Advance']=advance;
+      f['Balance']=(Number(f['Order Value'])||0)-advance;
+      f['Payment Status']=paymentStatus;
+      f['Payment Date']=paymentDate;
+    }
+    openDetail(currentOrderId);
+    renderOrders();
+    showToast('Payment updated for order #'+currentOrderId);
+  }else{
+    showToast('Save failed. Try again.');
+  }
+  btn.disabled=false;btn.textContent='Save Payment';
+}
+
+// ── MONTHLY P&L ──────────────────────────────────────────────
+function renderPLMonthOptions(){
+  const months=new Set();
+  financeData.forEach(f=>{
+    if(f['Last Updated']){
+      // Try to extract month from last updated
+      const d=new Date(f['Last Updated']);
+      if(!isNaN(d.getTime()))months.add(d.toLocaleString('en-IN',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'}));
+    }
+  });
+  const sel=document.getElementById('pl-month-filter');
+  // Keep "All Months" option
+  while(sel.children.length>1)sel.removeChild(sel.lastChild);
+  // Add current month always
+  const now=new Date();
+  const curMonth=now.toLocaleString('en-IN',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'});
+  months.add(curMonth);
+  [...months].sort().reverse().forEach(m=>{
+    const opt=document.createElement('option');
+    opt.value=m;opt.textContent=m;
+    sel.appendChild(opt);
+  });
+}
+
+function renderPL(){
+  const content=document.getElementById('pl-content');
+  const data=financeData;
+  if(!data.length){content.innerHTML='<div class="empty-state">No finance data yet. Orders will appear here once created via Master Entry.</div>';return;}
+
+  const totRev=data.reduce((s,f)=>s+(Number(f['Order Value'])||0),0);
+  const totMat=data.reduce((s,f)=>s+(Number(f['Material Cost'])||0),0);
+  const totPrint=data.reduce((s,f)=>s+(Number(f['Print Cost'])||0),0);
+  const totLabour=data.reduce((s,f)=>s+(Number(f['Labour Cost'])||0),0);
+  const totOH=data.reduce((s,f)=>s+(Number(f['Overhead Share'])||0),0);
+  const totCost=data.reduce((s,f)=>s+(Number(f['Total Cost'])||0),0);
+  const totProfit=totRev-totCost;
+  const margin=totRev>0?(totProfit/totRev)*100:0;
+  const totPaid=data.filter(f=>f['Payment Status']==='Paid').reduce((s,f)=>s+(Number(f['Order Value'])||0),0);
+  const totPending=data.reduce((s,f)=>s+(Number(f['Balance'])||0),0);
+  const profitClass=totProfit>=0?'profit':'loss';
+
+  content.innerHTML=
+    '<div class="pl-card">'+
+    '<div class="pl-title">Overall P&amp;L Summary</div>'+
+    '<div class="pl-row"><label>Total Revenue</label><span>'+fmtINR(totRev)+'</span></div>'+
+    '<div class="pl-row" style="padding-left:12px"><label>&#8722; Material Cost</label><span style="color:var(--red)">'+fmtINR(totMat)+'</span></div>'+
+    '<div class="pl-row" style="padding-left:12px"><label>&#8722; Print Cost</label><span style="color:var(--red)">'+fmtINR(totPrint)+'</span></div>'+
+    '<div class="pl-row" style="padding-left:12px"><label>&#8722; Salary Cost</label><span style="color:var(--red)">'+fmtINR(totLabour)+'</span></div>'+
+    '<div class="pl-row" style="padding-left:12px"><label>&#8722; Overhead</label><span style="color:var(--red)">'+fmtINR(totOH)+'</span></div>'+
+    '<div class="pl-row total"><label>Gross Profit</label><span class="'+profitClass+'">'+fmtINR(totProfit)+'</span></div>'+
+    '<div class="pl-row"><label>Profit Margin</label><span class="'+(margin>=20?'margin-good':margin>=10?'margin-warn':'margin-bad')+'">'+fmtPct(margin)+'</span></div>'+
+    '</div>'+
+    '<div class="pl-card">'+
+    '<div class="pl-title">Payment Summary</div>'+
+    '<div class="pl-row"><label>Total Collected</label><span style="color:var(--moss)">'+fmtINR(totPaid)+'</span></div>'+
+    '<div class="pl-row"><label>Total Outstanding</label><span style="color:var(--red)">'+fmtINR(totPending)+'</span></div>'+
+    '<div class="pl-row"><label>Orders Fully Paid</label><span>'+data.filter(f=>f['Payment Status']==='Paid').length+'</span></div>'+
+    '<div class="pl-row"><label>Orders Partial</label><span>'+data.filter(f=>f['Payment Status']==='Partial').length+'</span></div>'+
+    '<div class="pl-row"><label>Orders Pending</label><span style="color:var(--red)">'+data.filter(f=>f['Payment Status']==='Pending').length+'</span></div>'+
+    '</div>'+
+    '<div class="pl-card">'+
+    '<div class="pl-title">Cost Breakdown</div>'+
+    '<div class="pl-row"><label>Material Cost</label><span>'+fmtINR(totMat)+'<span style="color:rgba(44,31,20,0.4);font-size:11px;font-weight:400"> ('+( totCost>0?((totMat/totCost)*100).toFixed(0):0)+'% of total cost)</span></span></div>'+
+    '<div class="pl-row"><label>Print Cost</label><span>'+fmtINR(totPrint)+'</span></div>'+
+    '<div class="pl-row"><label>Salary Cost</label><span>'+fmtINR(totLabour)+'</span></div>'+
+    '<div class="pl-row"><label>Overhead</label><span>'+fmtINR(totOH)+'</span></div>'+
+    '<div class="pl-row total"><label>Total Cost</label><span>'+fmtINR(totCost)+'</span></div>'+
+    '</div>';
+}
+
+// ── SALESPERSON ──────────────────────────────────────────────
+function renderSales(){
+  const content=document.getElementById('sales-content');
+  const salespeople=['Sridevi','Anu Prasad','Esha'];
+  const allOrders=financeData;
+
+  let html='<div class="salesperson-grid">';
+  salespeople.forEach(sp=>{
+    const spOrders=allOrders;// We don't have saleBy in finance data directly
+    // Get from financeData by matching order IDs — for now show totals
+    html+='<div class="sp-card"><div class="sp-name">'+sp+'</div><div class="sp-stat">Orders &amp; Revenue</div><div class="sp-val" style="font-size:12px;color:rgba(44,31,20,0.4)">Link orders tool for details</div></div>';
+  });
+  html+='</div>';
+
+  // Build proper salesperson table from financeData cross-referenced with orders
+  // For now show all orders grouped notice
+  html+='<div class="pl-card" style="margin-top:16px"><div class="pl-title">All Orders by Value</div>';
+  const sorted=[...allOrders].sort((a,b)=>(Number(b['Order Value'])||0)-(Number(a['Order Value'])||0));
+  sorted.slice(0,20).forEach(f=>{
+    html+='<div class="pl-row"><label>'+String(f['Client']||'')+'</label><span>'+fmtINR(f['Order Value'])+'<span style="font-size:11px;font-weight:400;color:rgba(44,31,20,0.4)"> &middot; '+fmtPct(f['Margin %'])+'</span></span></div>';
+  });
+  html+='</div>';
+  content.innerHTML=html;
+}
+
+// ── SETTINGS ─────────────────────────────────────────────────
+function prefillSettings(){
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const curMonth=months[new Date().getMonth()];
+  const curYear=new Date().getFullYear();
+  const existing=overheadData.find(o=>String(o['Month'])===curMonth&&String(o['Year'])===String(curYear));
+  if(existing){
+    document.getElementById('settings-labour').value=Number(existing['Labour Rate Per Piece'])||'';
+    document.getElementById('settings-overhead').value=Number(existing['Total Overhead'])||'';
+    updateSettingsPreview();
+  }
+  ['settings-labour','settings-overhead'].forEach(id=>{
+    document.getElementById(id).addEventListener('input',updateSettingsPreview);
+  });
+}
+
+function updateSettingsPreview(){
+  const salaries=Number(document.getElementById('settings-labour').value)||0;
+  const overhead=Number(document.getElementById('settings-overhead').value)||0;
+  const prev=document.getElementById('settings-preview');
+  if(!salaries&&!overhead){prev.style.display='none';return;}
+  const totalUnits=financeData.reduce((s,f)=>s+(Number(f['Qty'])||0),0);
+  let parts=[];
+  if(salaries&&totalUnits)parts.push('Salaries: ₹'+Math.round(salaries/totalUnits)+'/bag');
+  else if(salaries)parts.push('Total salaries: ₹'+salaries.toLocaleString('en-IN'));
+  if(overhead&&totalUnits)parts.push('Overhead: ₹'+Math.round(overhead/totalUnits)+'/bag');
+  else if(overhead)parts.push('Total overhead: ₹'+overhead.toLocaleString('en-IN'));
+  if(totalUnits)parts.push('across '+totalUnits+' total bags');
+  prev.style.display='block';
+  prev.textContent=parts.join(' · ');
+}
+  const totalUnits=financeData.reduce((s,f)=>s+(Number(f['Qty'])||0),0);
+  let msg='';
+  
+  if(overhead&&totalUnits)msg+='Overhead: \u20b9'+Math.round(overhead/totalUnits)+'/bag (across '+totalUnits+' total units).';
+  else if(overhead)msg+='Overhead: \u20b9'+overhead+' total (add orders first to see per-bag split).';
+  prev.style.display='block';
+  prev.textContent=msg;
+}
+
+async function saveSettings(){
+  const labour=Number(document.getElementById('settings-labour').value)||0;
+  const overhead=Number(document.getElementById('settings-overhead').value)||0;
+  const month=document.getElementById('settings-month').value;
+  const year=document.getElementById('settings-year').value;
+  if(!labour&&!overhead){showToast('Enter at least one value');return;}
+
+  const btn=document.querySelector('.btn-save-settings');
+  btn.disabled=true;btn.textContent='Saving...';
+
+  await sheetPost({action:'setLabourRate',labourRate:labour,month,year});
+  await sheetPost({action:'setOverhead',overhead,month,year});
+
+  // Reload finance data with recalculated values
+  const data=await sheetCall({action:'getFinance'});
+  if(data){financeData=data.finance||[];overheadData=data.overhead||[];}
+
+  renderOrders();
+  renderOverheadHistory();
+  document.getElementById('settings-saved').classList.add('visible');
+  setTimeout(()=>document.getElementById('settings-saved').classList.remove('visible'),3000);
+  showToast('Salaries & overhead saved — all orders recalculated');
+  btn.disabled=false;btn.textContent='Save & Recalculate All Orders';
+}
+
+function renderOverheadHistory(){
+  const el=document.getElementById('overhead-history');
+  if(!overheadData.length){el.innerHTML='<div style="font-size:12px;color:rgba(44,31,20,0.4);padding:10px 0">No records yet.</div>';return;}
+  let html='';
+  [...overheadData].reverse().forEach(o=>{
+    html+='<div class="pl-row">'+
+      '<label>'+String(o['Month']||'')+' '+String(o['Year']||'')+'</label>'+
+      '<span style="font-size:12px">Salaries: \u20b9'+(Number(o['Labour Rate Per Piece'])||0).toLocaleString('en-IN')+' &nbsp;&middot;&nbsp; Overhead: \u20b9'+(Number(o['Total Overhead'])||0).toLocaleString('en-IN')+'</span>'+
+      '</div>';
+  });
+  el.innerHTML=html;
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+initApp();
+</script>
+</body>
+</html>
