@@ -703,14 +703,6 @@ function updateSettingsPreview(){
   prev.style.display='block';
   prev.textContent=parts.join(' · ');
 }
-  const totalUnits=financeData.reduce((s,f)=>s+(Number(f['Qty'])||0),0);
-  let msg='';
-  
-  if(overhead&&totalUnits)msg+='Overhead: \u20b9'+Math.round(overhead/totalUnits)+'/bag (across '+totalUnits+' total units).';
-  else if(overhead)msg+='Overhead: \u20b9'+overhead+' total (add orders first to see per-bag split).';
-  prev.style.display='block';
-  prev.textContent=msg;
-}
 
 async function saveSettings(){
   const labour=Number(document.getElementById('settings-labour').value)||0;
