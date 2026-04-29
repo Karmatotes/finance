@@ -35,24 +35,16 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 .nav-tab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:600}
 .nav-tab:hover:not(.active){color:var(--bark)}
 .page{display:none;padding:24px}.page.active{display:block}
-
-/* KPI ROW */
 .kpi-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 .kpi{background:var(--surface);border-radius:10px;padding:12px 16px;flex:1;min-width:120px;border:1px solid var(--border)}
 .kpi-val{font-size:22px;font-weight:700;color:var(--bark);line-height:1}
 .kpi-label{font-size:11px;color:rgba(44,31,20,0.5);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.4px}
-.kpi.green .kpi-val{color:var(--moss)}
-.kpi.red .kpi-val{color:var(--red)}
-.kpi.orange .kpi-val{color:var(--orange)}
-
-/* FILTERS */
+.kpi.green .kpi-val{color:var(--moss)}.kpi.red .kpi-val{color:var(--red)}.kpi.orange .kpi-val{color:var(--orange)}
 .filters-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
 .filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;color:var(--bark);transition:all .15s;font-family:'DM Sans',sans-serif}
 .filter-btn.active,.filter-btn:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
 .search-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--bark);outline:none;width:200px}
 .search-box:focus{border-color:var(--orange)}
-
-/* ORDERS TABLE */
 .table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin-bottom:24px}
 .fin-table{width:100%;border-collapse:collapse;font-size:12px}
 .fin-table th{background:var(--orange);color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
@@ -60,48 +52,33 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 .fin-table tr:last-child td{border-bottom:none}
 .fin-table tr:hover td{background:var(--cream);cursor:pointer}
 .pay-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
-.pay-paid{background:#E8F5E9;color:#166534}
-.pay-partial{background:#FFF8E1;color:#92400E}
-.pay-pending{background:var(--red-soft);color:var(--red)}
-.margin-good{color:var(--moss);font-weight:600}
-.margin-warn{color:#92400E;font-weight:600}
-.margin-bad{color:var(--red);font-weight:600}
-
-/* DETAIL PANEL */
+.pay-paid{background:#E8F5E9;color:#166534}.pay-partial{background:#FFF8E1;color:#92400E}.pay-pending{background:var(--red-soft);color:var(--red)}
+.margin-good{color:var(--moss);font-weight:600}.margin-warn{color:#92400E;font-weight:600}.margin-bad{color:var(--red);font-weight:600}
 .detail-panel{display:none;position:fixed;right:0;top:84px;bottom:0;width:380px;background:var(--surface);border-left:1px solid var(--border);box-shadow:-4px 0 20px rgba(44,31,20,0.1);z-index:200;overflow-y:auto}
 .detail-panel.open{display:block}
 .detail-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
-.detail-title{font-size:15px;font-weight:700;color:var(--bark)}
-.detail-sub{font-size:12px;color:rgba(44,31,20,0.5);margin-top:2px}
+.detail-title{font-size:15px;font-weight:700;color:var(--bark)}.detail-sub{font-size:12px;color:rgba(44,31,20,0.5);margin-top:2px}
 .btn-close{background:none;border:none;cursor:pointer;font-size:18px;color:rgba(44,31,20,0.4);padding:4px}
 .detail-body{padding:16px 20px}
 .detail-section{margin-bottom:16px}
 .detail-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:rgba(44,31,20,0.4);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
 .detail-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px}
-.detail-row label{color:rgba(44,31,20,0.5)}
-.detail-row span{font-weight:600;text-align:right}
+.detail-row label{color:rgba(44,31,20,0.5)}.detail-row span{font-weight:600;text-align:right}
 .cost-breakdown{background:var(--cream);border-radius:8px;padding:12px;margin-bottom:14px}
 .cost-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
 .cost-row.total{border-top:1px solid var(--border);margin-top:6px;padding-top:6px;font-weight:700;font-size:13px}
-.cost-row.profit{color:var(--moss);font-weight:700}
-.cost-row.loss{color:var(--red);font-weight:700}
-
-/* PAYMENT UPDATE FORM */
+.cost-row.profit{color:var(--moss);font-weight:700}.cost-row.loss{color:var(--red);font-weight:700}
 .payment-form{background:var(--orange-soft);border:1px solid rgba(230,81,0,0.2);border-radius:10px;padding:14px}
 .payment-form-title{font-size:12px;font-weight:700;color:var(--orange);margin-bottom:10px;text-transform:uppercase;letter-spacing:.4px}
 .form-group{margin-bottom:10px}
 .form-group label{display:block;font-size:11px;font-weight:600;color:rgba(44,31,20,0.6);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
-.form-control{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--bark);outline:none;transition:border-color .15s}
+.form-control{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--bark);outline:none;transition:border-color .15s}
 .form-control:focus{border-color:var(--orange)}
 .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .btn-save-payment{width:100%;background:var(--orange);color:#fff;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s}
-.btn-save-payment:hover{background:#F4511E}
-.btn-save-payment:disabled{opacity:.5;cursor:not-allowed}
-
-/* MONTHLY SETTINGS */
+.btn-save-payment:hover{background:#F4511E}.btn-save-payment:disabled{opacity:.5;cursor:not-allowed}
 .settings-card{background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:20px;margin-bottom:20px;max-width:600px}
-.settings-title{font-size:14px;font-weight:700;color:var(--bark);margin-bottom:4px}
-.settings-sub{font-size:12px;color:rgba(44,31,20,0.5);margin-bottom:16px}
+.settings-title{font-size:14px;font-weight:700;color:var(--bark);margin-bottom:4px}.settings-sub{font-size:12px;color:rgba(44,31,20,0.5);margin-bottom:16px}
 .month-selector{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .month-btn{padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface);color:rgba(44,31,20,0.6);transition:all .15s;font-family:'DM Sans',sans-serif}
 .month-btn.active{border-color:var(--orange);background:var(--orange-soft);color:var(--orange)}
@@ -110,26 +87,19 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 .input-with-prefix .form-control{padding-left:22px}
 .btn-save-settings{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
 .btn-save-settings:hover{background:#F4511E}
-.settings-saved{display:none;color:var(--moss);font-size:12px;font-weight:600;margin-top:8px}
-.settings-saved.visible{display:block}
-
-/* P&L SUMMARY */
+.settings-saved{display:none;color:var(--moss);font-size:12px;font-weight:600;margin-top:8px}.settings-saved.visible{display:block}
 .pl-card{background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:20px;margin-bottom:16px}
 .pl-title{font-size:14px;font-weight:700;color:var(--bark);margin-bottom:12px}
 .pl-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
 .pl-row:last-child{border-bottom:none}
-.pl-row label{color:rgba(44,31,20,0.6)}
-.pl-row span{font-weight:600}
+.pl-row label{color:rgba(44,31,20,0.6)}.pl-row span{font-weight:600}
 .pl-row.total{font-size:15px;font-weight:700;border-top:2px solid var(--border);margin-top:4px;padding-top:10px}
-.pl-row.total span.profit{color:var(--moss)}
-.pl-row.total span.loss{color:var(--red)}
+.pl-row.total span.profit{color:var(--moss)}.pl-row.total span.loss{color:var(--red)}
 .salesperson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
 .sp-card{background:var(--cream);border-radius:10px;padding:12px 14px;border:1px solid var(--border)}
 .sp-name{font-size:12px;font-weight:700;color:var(--bark);margin-bottom:6px}
 .sp-stat{font-size:11px;color:rgba(44,31,20,0.6);margin-bottom:2px}
 .sp-val{font-size:14px;font-weight:700;color:var(--orange)}
-
-/* LOADING / TOAST */
 #loading-overlay{position:fixed;inset:0;background:rgba(44,31,20,0.75);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
 #loading-overlay.hidden{display:none}
 .loading-spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
@@ -141,7 +111,6 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 .btn-refresh{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;transition:all .2s}
 .btn-refresh:hover{background:rgba(255,255,255,0.25)}
 .btn-refresh.spinning span{display:inline-block;animation:spin .6s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 .date-filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .df-btn{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;color:var(--bark);transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
 .df-btn.active{background:var(--orange);color:#fff;border-color:var(--orange)}
@@ -151,7 +120,7 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 .df-input{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--bark);outline:none}
 .df-input:focus{border-color:var(--orange)}
 .df-label{font-size:11px;color:rgba(44,31,20,0.5);font-weight:500}
-.df-results{font-size:11px;color:rgba(44,31,20,0.4);margin-left:auto}
+.df-results{font-size:11px;color:rgba(44,31,20,0.4);margin-left:auto;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -169,33 +138,33 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 
 <header>
   <div class="logo">
-    <div class="logo-mark">&#8377;</div>
-    <div><h1>KarmaTotes</h1><span>Finance &middot; P&amp;L Tracker</span></div>
+    <div class="logo-mark">₹</div>
+    <div><h1>KarmaTotes</h1><span>Finance · P&L Tracker</span></div>
   </div>
   <div class="header-right">
     <div class="date-badge" id="live-date"></div>
     <button class="btn-refresh" id="btn-refresh" onclick="refreshData()"><span>↻</span> Refresh</button>
-    <a href="https://karmatotes.github.io/tracker/" target="_blank" class="btn-link">&#8862; Production</a>
-    <a href="https://karmatotes.github.io/orders/" target="_blank" class="btn-link">&#65291; Orders</a>
+    <a href="https://karmatotes.github.io/tracker/" target="_blank" class="btn-link">⊞ Production</a>
+    <a href="https://karmatotes.github.io/orders/" target="_blank" class="btn-link">＋ Orders</a>
   </div>
 </header>
 
 <div class="nav-tabs">
-  <div class="nav-tab active" id="tab-orders"   onclick="switchTab('orders')">&#128203; Orders P&amp;L</div>
-  <div class="nav-tab"        id="tab-pl"       onclick="switchTab('pl')">&#128200; Monthly P&amp;L</div>
-  <div class="nav-tab"        id="tab-sales"    onclick="switchTab('sales')">&#127775; Salesperson</div>
-  <div class="nav-tab"        id="tab-settings" onclick="switchTab('settings')">&#9881; Salaries &amp; Overhead</div>
+  <div class="nav-tab active" id="tab-orders"   onclick="switchTab('orders')">📋 Orders P&L</div>
+  <div class="nav-tab"        id="tab-pl"       onclick="switchTab('pl')">📈 Monthly P&L</div>
+  <div class="nav-tab"        id="tab-sales"    onclick="switchTab('sales')">👥 Salesperson</div>
+  <div class="nav-tab"        id="tab-settings" onclick="switchTab('settings')">⚙️ Salaries & Overhead</div>
 </div>
 
-<!-- ═══════════ ORDERS P&L PAGE -->
+<!-- ORDERS P&L PAGE -->
 <div class="page active" id="page-orders">
   <div class="kpi-row" id="orders-kpis">
-    <div class="kpi"><div class="kpi-val" id="kpi-total-orders">&#8212;</div><div class="kpi-label">Total Orders</div></div>
-    <div class="kpi green"><div class="kpi-val" id="kpi-revenue">&#8212;</div><div class="kpi-label">Total Revenue</div></div>
-    <div class="kpi orange"><div class="kpi-val" id="kpi-profit">&#8212;</div><div class="kpi-label">Gross Profit</div></div>
-    <div class="kpi"><div class="kpi-val" id="kpi-avg-margin">&#8212;</div><div class="kpi-label">Avg Margin</div></div>
-    <div class="kpi red"><div class="kpi-val" id="kpi-outstanding">&#8212;</div><div class="kpi-label">Outstanding</div></div>
-    <div class="kpi"><div class="kpi-val" id="kpi-avg-cpb">&#8212;</div><div class="kpi-label">Avg Cost/Bag</div></div>
+    <div class="kpi"><div class="kpi-val" id="kpi-total-orders">—</div><div class="kpi-label">Total Orders</div></div>
+    <div class="kpi green"><div class="kpi-val" id="kpi-revenue">—</div><div class="kpi-label">Total Revenue</div></div>
+    <div class="kpi orange"><div class="kpi-val" id="kpi-profit">—</div><div class="kpi-label">Gross Profit</div></div>
+    <div class="kpi"><div class="kpi-val" id="kpi-avg-margin">—</div><div class="kpi-label">Avg Margin</div></div>
+    <div class="kpi red"><div class="kpi-val" id="kpi-outstanding">—</div><div class="kpi-label">Outstanding</div></div>
+    <div class="kpi"><div class="kpi-val" id="kpi-avg-cpb">—</div><div class="kpi-label">Avg Cost/Bag</div></div>
   </div>
   <div class="date-filter-bar">
     <button class="df-btn active" id="df-all"       onclick="setFinDateFilter('all',this)">All Time</button>
@@ -212,7 +181,7 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
     <span class="df-results" id="df-results"></span>
   </div>
   <div class="filters-bar">
-    <input class="search-box" id="fin-search" placeholder="&#128269; Search client..." oninput="renderOrders()">
+    <input class="search-box" id="fin-search" placeholder="🔍 Search client..." oninput="renderOrders()">
     <button class="filter-btn active" id="ff-all"     onclick="setFilter('all',this)">All</button>
     <button class="filter-btn"        id="ff-pending" onclick="setFilter('pending',this)">Pending Payment</button>
     <button class="filter-btn"        id="ff-partial" onclick="setFilter('partial',this)">Partial</button>
@@ -223,7 +192,7 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
     <table class="fin-table">
       <thead>
         <tr>
-          <th>#</th><th>Client</th><th>Qty</th><th>Order &#8377;</th>
+          <th>#</th><th>Client</th><th>Qty</th><th>Order ₹</th>
           <th>Material</th><th>Print</th><th>Salaries</th><th>Overhead</th>
           <th>Total Cost</th><th>Cost/Bag</th><th>Profit</th><th>Margin</th>
           <th>Payment</th><th>Balance</th>
@@ -234,7 +203,7 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
   </div>
 </div>
 
-<!-- ═══════════ MONTHLY P&L PAGE -->
+<!-- MONTHLY P&L PAGE -->
 <div class="page" id="page-pl">
   <div class="filters-bar">
     <select class="search-box" id="pl-month-filter" onchange="renderPL()" style="width:auto">
@@ -244,15 +213,15 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
   <div id="pl-content"></div>
 </div>
 
-<!-- ═══════════ SALESPERSON PAGE -->
+<!-- SALESPERSON PAGE -->
 <div class="page" id="page-sales">
   <div id="sales-content"></div>
 </div>
 
-<!-- ═══════════ LABOUR & OVERHEAD SETTINGS PAGE -->
+<!-- LABOUR & OVERHEAD SETTINGS PAGE -->
 <div class="page" id="page-settings">
   <div class="settings-card">
-    <div class="settings-title">Monthly Salaries &amp; Overhead</div>
+    <div class="settings-title">Monthly Salaries & Overhead</div>
     <div class="settings-sub">Enter total amounts once per month. Both salaries and overhead are split across all orders proportionally by quantity of bags produced.</div>
 
     <div style="margin-bottom:12px">
@@ -278,17 +247,17 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 
     <div class="form-row-2" style="margin-bottom:12px">
       <div class="form-group" style="margin-bottom:0">
-        <label>Total Salaries &#8377; this month</label>
+        <label>Total Salaries ₹ this month</label>
         <div class="input-with-prefix">
-          <span class="input-prefix">&#8377;</span>
+          <span class="input-prefix">₹</span>
           <input class="form-control" id="settings-labour" type="number" placeholder="e.g. 80000" min="0">
         </div>
         <div style="font-size:11px;color:rgba(44,31,20,0.4);margin-top:4px">All tailors + helpers combined</div>
       </div>
       <div class="form-group" style="margin-bottom:0">
-        <label>Total Monthly Overhead &#8377;</label>
+        <label>Total Monthly Overhead ₹</label>
         <div class="input-with-prefix">
-          <span class="input-prefix">&#8377;</span>
+          <span class="input-prefix">₹</span>
           <input class="form-control" id="settings-overhead" type="number" placeholder="e.g. 50000" min="0">
         </div>
         <div style="font-size:11px;color:rgba(44,31,20,0.4);margin-top:4px">Rent, electricity, misc expenses</div>
@@ -297,8 +266,8 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 
     <div id="settings-preview" style="display:none;margin-bottom:12px;padding:10px 12px;background:var(--orange-soft);border-radius:8px;font-size:12px;color:var(--orange)"></div>
 
-    <button class="btn-save-settings" onclick="saveSettings()">Save &amp; Recalculate All Orders</button>
-    <div class="settings-saved" id="settings-saved">&#10003; Saved &amp; all orders recalculated</div>
+    <button class="btn-save-settings" onclick="saveSettings()">Save & Recalculate All Orders</button>
+    <div class="settings-saved" id="settings-saved">✓ Saved & all orders recalculated</div>
   </div>
 
   <!-- Existing overhead records -->
@@ -309,14 +278,14 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
   </div>
 </div>
 
-<!-- ═══════════ DETAIL PANEL (slide in from right) -->
+<!-- DETAIL PANEL (slide in from right) -->
 <div class="detail-panel" id="detail-panel">
   <div class="detail-header">
     <div>
       <div class="detail-title" id="dp-client">—</div>
       <div class="detail-sub" id="dp-sub">—</div>
     </div>
-    <button class="btn-close" onclick="closeDetail()">&#10005;</button>
+    <button class="btn-close" onclick="closeDetail()">✕</button>
   </div>
   <div class="detail-body">
     <div class="detail-section">
@@ -352,7 +321,7 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
         </div>
         <div class="form-row-2">
           <div class="form-group">
-            <label>Advance &#8377;</label>
+            <label>Advance ₹</label>
             <input class="form-control" id="dp-advance-input" type="number" min="0" oninput="previewBalance()">
           </div>
           <div class="form-group">
@@ -371,13 +340,15 @@ header{background:var(--orange);color:#fff;padding:0 24px;height:60px;display:fl
 
 <script>
 const SHEET_URL="https://script.google.com/macros/s/AKfycbxpcfocezAqlwg37_SujPuDilIyXEeve5A8Niir1vohU3pz2sytBrSIjQyX6vLmoIPN/exec";
+const CONFIG_URL="https://script.google.com/macros/s/AKfycbxRr3o5M_bYR3V9oZf2qMH0-Hrp13qP_PcA7h-1KddIPx6TzfMzY6KoYnTMxaa8mnSa/exec";
 
-let financeData=[], overheadData=[];
-let activeFilter='all', currentOrderId=null;
+let configData=null;
+let financeData=[],overheadData=[];
+let activeFilter='all',currentOrderId=null;
 
 function nowLabel(){const n=new Date();return n.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+', '+n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});}
-function fmtINR(n){const v=Number(n)||0;return'\u20b9'+Math.round(v).toLocaleString('en-IN');}
-function fmtINRFull(n){const v=Number(n)||0;return'\u20b9'+v.toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function fmtINR(n){const v=Number(n)||0;return'₹'+Math.round(v).toLocaleString('en-IN');}
+function fmtINRFull(n){const v=Number(n)||0;return'₹'+v.toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:2});}
 function fmtPct(n){return(Number(n)||0).toFixed(1)+'%';}
 function todayISO(){return new Date().toISOString().split('T')[0];}
 
@@ -394,7 +365,7 @@ async function sheetCall(params){
     const res=await fetch(SHEET_URL+'?'+new URLSearchParams(params).toString());
     const data=await res.json();
     if(data.error)throw new Error(data.error);
-    setSyncStatus('ok','Synced \u00b7 karmatotes@gmail.com');return data;
+    setSyncStatus('ok','Synced · karmatotes@gmail.com');return data;
   }catch(err){setSyncStatus('err','Sync failed.');console.error(err);return null;}
 }
 
@@ -404,7 +375,7 @@ async function sheetPost(body){
     const res=await fetch(SHEET_URL,{method:'POST',body:JSON.stringify(body)});
     const data=await res.json();
     if(data.error)throw new Error(data.error);
-    setSyncStatus('ok','Saved \u00b7 karmatotes@gmail.com');return data;
+    setSyncStatus('ok','Saved · karmatotes@gmail.com');return data;
   }catch(err){setSyncStatus('err','Save failed.');console.error(err);return null;}
 }
 
@@ -437,6 +408,10 @@ async function initApp(){
   // Set current month in settings
   const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('settings-month').value=months[new Date().getMonth()];
+
+  // Load config
+  const cfgData=await fetch(`${CONFIG_URL}?action=getConfig`).then(r=>r.json()).catch(err=>{console.error('Config load failed',err);return null;});
+  if(cfgData)configData=cfgData;
 
   const data=await sheetCall({action:'getFinance'});
   document.getElementById('loading-overlay').classList.add('hidden');
@@ -591,7 +566,7 @@ function openDetail(orderId){
   if(!f)return;
   currentOrderId=orderId;
   document.getElementById('dp-client').textContent=String(f['Client']||'');
-  document.getElementById('dp-sub').textContent='Order #'+orderId+' \u00b7 '+String(f['Qty']||0)+' pcs';
+  document.getElementById('dp-sub').textContent='Order #'+orderId+' · '+String(f['Qty']||0)+' pcs';
   document.getElementById('dp-qty').textContent=String(f['Qty']||0)+' pcs';
   document.getElementById('dp-order-value').textContent=fmtINR(f['Order Value']);
   document.getElementById('dp-advance').textContent=fmtINR(f['Advance']);
@@ -671,15 +646,12 @@ function renderPLMonthOptions(){
   const months=new Set();
   financeData.forEach(f=>{
     if(f['Last Updated']){
-      // Try to extract month from last updated
       const d=new Date(f['Last Updated']);
       if(!isNaN(d.getTime()))months.add(d.toLocaleString('en-IN',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'}));
     }
   });
   const sel=document.getElementById('pl-month-filter');
-  // Keep "All Months" option
   while(sel.children.length>1)sel.removeChild(sel.lastChild);
-  // Add current month always
   const now=new Date();
   const curMonth=now.toLocaleString('en-IN',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'});
   months.add(curMonth);
@@ -709,12 +681,12 @@ function renderPL(){
 
   content.innerHTML=
     '<div class="pl-card">'+
-    '<div class="pl-title">Overall P&amp;L Summary</div>'+
+    '<div class="pl-title">Overall P&L Summary</div>'+
     '<div class="pl-row"><label>Total Revenue</label><span>'+fmtINR(totRev)+'</span></div>'+
-    '<div class="pl-row" style="padding-left:12px"><label>&#8722; Material Cost</label><span style="color:var(--red)">'+fmtINR(totMat)+'</span></div>'+
-    '<div class="pl-row" style="padding-left:12px"><label>&#8722; Print Cost</label><span style="color:var(--red)">'+fmtINR(totPrint)+'</span></div>'+
-    '<div class="pl-row" style="padding-left:12px"><label>&#8722; Salary Cost</label><span style="color:var(--red)">'+fmtINR(totLabour)+'</span></div>'+
-    '<div class="pl-row" style="padding-left:12px"><label>&#8722; Overhead</label><span style="color:var(--red)">'+fmtINR(totOH)+'</span></div>'+
+    '<div class="pl-row" style="padding-left:12px"><label>− Material Cost</label><span style="color:var(--red)">'+fmtINR(totMat)+'</span></div>'+
+    '<div class="pl-row" style="padding-left:12px"><label>− Print Cost</label><span style="color:var(--red)">'+fmtINR(totPrint)+'</span></div>'+
+    '<div class="pl-row" style="padding-left:12px"><label>− Salary Cost</label><span style="color:var(--red)">'+fmtINR(totLabour)+'</span></div>'+
+    '<div class="pl-row" style="padding-left:12px"><label>− Overhead</label><span style="color:var(--red)">'+fmtINR(totOH)+'</span></div>'+
     '<div class="pl-row total"><label>Gross Profit</label><span class="'+profitClass+'">'+fmtINR(totProfit)+'</span></div>'+
     '<div class="pl-row"><label>Profit Margin</label><span class="'+(margin>=20?'margin-good':margin>=10?'margin-warn':'margin-bad')+'">'+fmtPct(margin)+'</span></div>'+
     '</div>'+
@@ -739,23 +711,25 @@ function renderPL(){
 // ── SALESPERSON ──────────────────────────────────────────────
 function renderSales(){
   const content=document.getElementById('sales-content');
-  const salespeople=['Sridevi','Anu Prasad','Esha'];
-  const allOrders=financeData;
+  let salespeople=['Sridevi','Anu Prasad','Esha'];
+  
+  // APPEND config sales reps
+  if(configData&&configData.people){
+    const cfgReps=configData.people.filter(p=>p.type==='sales').map(p=>p.name);
+    salespeople=[...new Set([...salespeople,...cfgReps])];
+  }
 
   let html='<div class="salesperson-grid">';
   salespeople.forEach(sp=>{
-    const spOrders=allOrders;// We don't have saleBy in finance data directly
-    // Get from financeData by matching order IDs — for now show totals
-    html+='<div class="sp-card"><div class="sp-name">'+sp+'</div><div class="sp-stat">Orders &amp; Revenue</div><div class="sp-val" style="font-size:12px;color:rgba(44,31,20,0.4)">Link orders tool for details</div></div>';
+    html+='<div class="sp-card"><div class="sp-name">'+sp+'</div><div class="sp-stat">Orders & Revenue</div><div class="sp-val" style="font-size:12px;color:rgba(44,31,20,0.4)">Link orders tool for details</div></div>';
   });
   html+='</div>';
 
-  // Build proper salesperson table from financeData cross-referenced with orders
-  // For now show all orders grouped notice
+  // Build all orders by value table
   html+='<div class="pl-card" style="margin-top:16px"><div class="pl-title">All Orders by Value</div>';
-  const sorted=[...allOrders].sort((a,b)=>(Number(b['Order Value'])||0)-(Number(a['Order Value'])||0));
+  const sorted=[...financeData].sort((a,b)=>(Number(b['Order Value'])||0)-(Number(a['Order Value'])||0));
   sorted.slice(0,20).forEach(f=>{
-    html+='<div class="pl-row"><label>'+String(f['Client']||'')+'</label><span>'+fmtINR(f['Order Value'])+'<span style="font-size:11px;font-weight:400;color:rgba(44,31,20,0.4)"> &middot; '+fmtPct(f['Margin %'])+'</span></span></div>';
+    html+='<div class="pl-row"><label>'+String(f['Client']||'')+'</label><span>'+fmtINR(f['Order Value'])+'<span style="font-size:11px;font-weight:400;color:rgba(44,31,20,0.4)"> · '+fmtPct(f['Margin %'])+'</span></span></div>';
   });
   html+='</div>';
   content.innerHTML=html;
@@ -825,7 +799,7 @@ function renderOverheadHistory(){
   [...overheadData].reverse().forEach(o=>{
     html+='<div class="pl-row">'+
       '<label>'+String(o['Month']||'')+' '+String(o['Year']||'')+'</label>'+
-      '<span style="font-size:12px">Salaries: \u20b9'+(Number(o['Labour Rate Per Piece'])||0).toLocaleString('en-IN')+' &nbsp;&middot;&nbsp; Overhead: \u20b9'+(Number(o['Total Overhead'])||0).toLocaleString('en-IN')+'</span>'+
+      '<span style="font-size:12px">Salaries: ₹'+(Number(o['Labour Rate Per Piece'])||0).toLocaleString('en-IN')+' · Overhead: ₹'+(Number(o['Total Overhead'])||0).toLocaleString('en-IN')+'</span>'+
       '</div>';
   });
   el.innerHTML=html;
